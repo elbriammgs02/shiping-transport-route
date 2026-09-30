@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Logística Marítima</title>
+
+    <!-- Google Font -->
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- Leaflet -->
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    >
+
+    <!-- Nuestro CSS -->
+    <link
+        rel="stylesheet"
+        href="./style.css"
+    >
+    <link rel="icon" href="data:,">
+</head>
+
+<body>
+
+    <!-- =====================================================
+         ENCABEZADO
+    ====================================================== -->
+
+    <header class="topbar">
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                🚢
+            </div>
+
+            <div>
+                <h1>
+                    Sistema de Logística Marítima
+                </h1>
+
+                <p>
+                    Seguimiento y control de mercancías
+                </p>
+            </div>
+
+        </div>
+
+        <div class="system-status">
+            <span class="status-dot"></span>
+            Sistema activo
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         CONTENIDO PRINCIPAL
+    ====================================================== -->
+
+    <main class="main-container">
+
+
+        <!-- =================================================
+             PANEL IZQUIERDO
+        ================================================== -->
+
+        <aside class="sidebar">
+
+
+            <!-- =============================================
+                 SELECTOR DE RUTA
+            ============================================== -->
+
+            <section class="card route-selector-card">
+
+                <div class="card-header">
+
+                    <div>
+                        <span class="section-kicker">
+                            PLANIFICACIÓN
+                        </span>
+
+                        <h2>
+                            Seleccionar ruta
+                        </h2>
+                    </div>
+
+                    <span class="header-icon">
+                        🗺️
+                    </span>
+
+                </div>
+
+
+                <label
+                    class="input-label"
+                    for="selectRuta"
+                >
+                    Ruta marítima
+                </label>
+
+
+                <select
+                    id="selectRuta"
+                    class="custom-input"
+                >
+
+                    <option value="ruta1">
+                        Ruta 1 — Miami → Panamá → Antofagasta
+                    </option>
+
+                    <option value="ruta2">
+                        Ruta 2 — Shanghái → Singapur → Suez → Sudáfrica → Magallanes → Arica
+                    </option>
+
+                    <option value="ruta3">
+                        Ruta 3 — Hamburgo → Santos → Nueva Palmira → Puerto Busch
+                    </option>
+
+                </select>
+
+
+                <div class="selected-route">
+
+                    <div class="selected-route-icon">
+                        🚢
+                    </div>
+
+                    <div>
+
+                        <strong id="nombreRuta">
+                            Ruta 1
+                        </strong>
+
+                        <span id="routeSummary">
+                            Miami → Canal de Panamá → Antofagasta
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =============================================
+                 SEGUIMIENTO
+            ============================================== -->
+
+            <section class="card">
+
+                <div class="card-header">
+
+                    <div>
+                        <span class="section-kicker">
+                            SEGUIMIENTO
+                        </span>
+
+                        <h2>
+                            Estado del envío
+                        </h2>
+                    </div>
+
+                    <span class="header-icon">
+                        📍
+                    </span>
+
+                </div>
+
+
+                <div class="day-display">
+
+                    <div>
+
+                        <span>
+                            DÍA
+                        </span>
+
+                        <strong id="diaActual">
+                            1
+                        </strong>
+
+                    </div>
+
+                    <div
+                        class="date-display"
+                        id="fechaActual"
+                    >
+                        1 de Enero
+                    </div>
+
+                </div>
+
+
+                <div class="progress-container">
+
+                    <div class="progress-info">
+
+                        <span>
+                            Progreso del viaje
+                        </span>
+
+                        <strong id="progressPercent">
+                            0%
+                        </strong>
+
+                    </div>
+
+                    <div class="progress-track">
+
+                        <div
+                            id="progressBar"
+                            class="progress-bar"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="slider-container">
+
+                    <div class="slider-labels">
+
+                        <span>
+                            Día 1
+                        </span>
+
+                        <span id="sliderMax">
+                            Día 150
+                        </span>
+
+                    </div>
+
+                    <input
+                        type="range"
+                        id="sliderDia"
+                        aria-label="Día de la simulación"
+                        min="1"
+                        max="150"
+                        value="1"
+                    >
+
+                    <div
+                        class="slider-value"
+                        id="valDia"
+                    >
+                        Día 1
+                    </div>
+
+                </div>
+
+
+                <div class="auto-controls">
+                    <button id="btnAuto" class="primary-button" type="button">▶ Automático</button>
+                    <button id="btnPausa" class="secondary-button" type="button">⏸ Pausa</button>
+                    <select id="velocidadAuto" class="custom-input compact-select" aria-label="Velocidad de simulación">
+                        <option value="1000">1×</option><option value="500">2×</option><option value="200">5×</option>
+                    </select>
+                </div>
+
+                <div class="location-box">
+
+                    <span>
+                        UBICACIÓN ACTUAL
+                    </span>
+
+                    <strong id="ubicacionActual">
+                        Puerto de Miami
+                    </strong>
+
+                </div>
+
+
+                <div
+                    class="simulation-info"
+                    id="infoSimulacion"
+                >
+                    Buque en tránsito.
+                </div>
+
+            </section>
+
+
+            <div class="quick-tools">
+                <button id="abrirMercancia" class="utility-button" type="button">📦 Mercancía</button>
+                <button id="abrirCalculadora" class="utility-button" type="button">📐 Almacenamiento</button>
+            </div>
+
+        </aside>
+
+
+        <!-- =================================================
+             PANEL DERECHO
+        ================================================== -->
+
+        <section class="map-section">
+
+
+            <div class="map-card">
+
+                <div id="map"></div>
+
+
+                <!-- Panel compacto de información dentro del mapa -->
+                <div class="map-info-panel" id="mapInfoPanel">
+                    <div class="map-info-title">
+                        <span>🔔 Alertas e información</span>
+                        <span class="live-dot" aria-hidden="true"></span>
+                    </div>
+                    <div id="mapInfoClima" class="map-info-row">🌤️ Clima: cargando...</div>
+                    <div id="mapInfoTrafico" class="map-info-row">🟢 Tráfico marítimo bajo</div>
+                    <div id="mapInfoMercancia" class="map-info-row">🚢 Mercancía en tránsito</div>
+                    <div id="mapInfoRecojo" class="map-info-row map-info-emphasis">📍 Seguimiento activo</div>
+                </div>
+
+                <!-- =========================================
+                     LEYENDA
+                ========================================== -->
+
+                <div class="map-legend">
+
+                    <strong>
+                        Tráfico marítimo
+                    </strong>
+
+                    <div class="legend-item">
+
+                        <span class="legend-circle traffic-low"></span>
+
+                        Bajo
+
+                    </div>
+
+                    <div class="legend-item">
+
+                        <span class="legend-circle traffic-medium"></span>
+
+                        Medio
+
+                    </div>
+
+                    <div class="legend-item">
+
+                        <span class="legend-circle traffic-high"></span>
+
+                        Alto
+
+                    </div>
+
+                </div>
+
+
+                <!-- =========================================
+                     ALERTA FLOTANTE DEL MAPA
+                ========================================== -->
+
+                <div
+                    id="mapAlert"
+                    class="map-alert"
+                >
+
+                    <div
+                        id="mapAlertContent"
+                    >
+                        🚢 Buque en tránsito
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =============================================
+                 TABLA DE RUTA
+            ============================================== -->
+
+            <section class="card route-table-card">
+
+                <div class="card-header">
+
+                    <div>
+
+                        <span class="section-kicker">
+                            RUTA
+                        </span>
+
+                        <h2>
+                            Puntos de recorrido
+                        </h2>
+
+                    </div>
+
+                    <div class="points-counter">
+
+                        <span>
+                            Puntos
+                        </span>
+
+                        <strong id="totalPuntos">
+                            3
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    #
+                                </th>
+
+                                <th>
+                                    Puerto / Punto
+                                </th>
+
+                                <th>
+                                    Latitud
+                                </th>
+
+                                <th>
+                                    Longitud
+                                </th>
+
+                                <th>
+                                    Tipo
+                                </th>
+
+                                <th>
+                                    Día
+                                </th>
+
+                                <th>
+                                    Estado
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody id="tablaDatos"></tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+        </section>
+
+    </main>
+
+
+    <!-- Calculadora en ventana independiente dentro de la misma página -->
+    <div id="calculatorModal" class="modal-backdrop" aria-hidden="true">
+        <div class="calculator-modal" role="dialog" aria-modal="true" aria-labelledby="calculatorTitle">
+            <button id="cerrarCalculadora" class="modal-close" type="button" aria-label="Cerrar">×</button>
+            <span class="section-kicker">LOGÍSTICA</span>
+            <h2 id="calculatorTitle">Cálculo de almacenamiento</h2>
+            <div class="form-grid">
+                <div class="form-group"><label for="alto">Alto (m)</label><input id="alto" class="custom-input" type="number" min="0" step="0.01" placeholder="0.00"></div>
+                <div class="form-group"><label for="ancho">Ancho (m)</label><input id="ancho" class="custom-input" type="number" min="0" step="0.01" placeholder="0.00"></div>
+                <div class="form-group"><label for="largo">Largo (m)</label><input id="largo" class="custom-input" type="number" min="0" step="0.01" placeholder="0.00"></div>
+                <div class="form-group"><label for="cantidad">Cantidad</label><input id="cantidad" class="custom-input" type="number" min="0" step="1" placeholder="0"></div>
+            </div>
+            <button id="calcular" class="primary-button" type="button">Calcular volumen</button>
+            <div id="resultado" class="calculation-result">Volumen total: 0.00 m³</div>
+        </div>
+    </div>
+
+    <div id="mercanciaModal" class="modal-backdrop" aria-hidden="true">
+        <div class="calculator-modal" role="dialog" aria-modal="true" aria-labelledby="mercanciaTitle">
+            <button id="cerrarMercancia" class="modal-close" type="button" aria-label="Cerrar">×</button>
+            <span class="section-kicker">CARGA</span><h2 id="mercanciaTitle">Mercancía del envío</h2>
+            <div class="form-grid">
+                <div class="form-group"><label for="tipoMercancia">Tipo</label><select id="tipoMercancia" class="custom-input"></select></div>
+                <div class="form-group"><label for="presentacionMercancia">Presentación / tamaño</label><select id="presentacionMercancia" class="custom-input"></select></div>
+                <div class="form-group"><label for="cantidadMercancia">Cantidad</label><input id="cantidadMercancia" class="custom-input" type="number" min="1" step="1" value="20"></div>
+                <div class="form-group"><label for="tipoCambio">Tipo de cambio (Bs por USD)</label><input id="tipoCambio" class="custom-input" type="number" min="0.01" step="0.01" value="10.50"></div>
+                <div class="form-group"><label for="precioUnitario">Precio unitario (USD)</label><input id="precioUnitario" class="custom-input" type="number" min="0" step="0.01"></div>
+            </div>
+            <div id="resumenMercancia" class="cargo-summary"></div>
+        </div>
+    </div>
+
+    <!-- Alertas importantes: aparecen sobre la pantalla -->
+    <div id="toastAlert" class="toast-alert" aria-live="assertive" aria-hidden="true">
+        <button id="cerrarToast" class="toast-close" type="button" aria-label="Cerrar alerta">×</button>
+        <div id="toastAlertContent"></div>
+    </div>
+
+    <!-- =====================================================
+         LEAFLET JS
+    ====================================================== -->
+
+    <script
+        src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    ></script>
+
+
+    <!-- =====================================================
+         NUESTRO JS
+    ====================================================== -->
+
+    <script
+        src="./rutas.js"
+    ></script>
+
+    <script
+        src="./script.js"
+    ></script>
+
+</body>
+</html>
